@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ command }) => ({
     plugins: [react()],
-    base: command === 'serve' ? '/' : '/react-gh-release-pipeline/',
+    base: command === 'serve' ? '/' : `/${process.env.REPOSITORY_NAME}/`,
 }))

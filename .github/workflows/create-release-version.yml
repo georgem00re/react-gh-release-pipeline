@@ -37,7 +37,9 @@ jobs:
         with:
           node-version-file: "react-application/.nvmrc"
       - run: npm ci
-      - run: npm run build
+      - uses: ./.github/actions/get-repository-name
+        id: get-repository-name
+      - run: REPOSITORY_NAME=${{ steps.get-repository-name.outputs.repository-name }} npm run build
       - run: zip -r dist.zip dist
       - uses: actions/create-release@v1
         id: create-release

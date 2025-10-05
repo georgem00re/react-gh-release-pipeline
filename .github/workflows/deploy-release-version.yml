@@ -1,6 +1,8 @@
 name: deploy-release-version
 on:
   push:
+    branches:
+      - master
     paths:
       - "release_version"
 permissions:

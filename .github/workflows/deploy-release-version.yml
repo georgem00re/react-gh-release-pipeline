@@ -1,0 +1,29 @@
+name: deploy-release-version
+on:
+  push:
+    paths:
+      - "release_version"
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy-release-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/read-release-version
+        id: read-release-version
+      - run: |
+          gh release download ${{ steps.read-release-version.outputs.release-version }} \
+            --pattern "dist.zip" \
+            --dir ./downloaded
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          mkdir -p ./site
+          unzip ./downloaded/dist.zip -d ./site
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

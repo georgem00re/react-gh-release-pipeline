@@ -1,5 +1,4 @@
 
-
 react-app-install-dependencies:
 	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && cd react-application && nvm use && npm install
 

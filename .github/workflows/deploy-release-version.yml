@@ -17,17 +17,13 @@ jobs:
       - uses: ./.github/actions/read-release-version
         id: read-release-version
       - run: |
-          gh release download ${{ steps.read-release-version.outputs.release-version }} \
-            --pattern "dist.zip" \
-            --dir ./downloaded
+          gh release download ${{ steps.read-release-version.outputs.release-version }} --pattern "dist.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          mkdir -p ./site
-          unzip ./downloaded/dist.zip -d ./site
+      - run: unzip dist.zip
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: dist/
   deploy-pages-artifact:
     needs: upload-pages-artifact
     permissions:

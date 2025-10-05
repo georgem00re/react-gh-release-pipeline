@@ -2,7 +2,7 @@ name: get-repository-name
 outputs:
   repository-name:
     description: "The GitHub repository name"
-    value: ${{ steps.output-repository-name-and-owner.outputs.repository-name }}
+    value: ${{ steps.output-repository-name.outputs.repository-name }}
 runs:
   using: "composite"
   steps:

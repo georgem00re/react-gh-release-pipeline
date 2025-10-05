@@ -1,0 +1,43 @@
+name: create-release-version
+on:
+  workflow_call:
+    inputs:
+      commit_sha:
+        required: true
+        type: string
+      release_version:
+        required: true
+        type: string
+jobs:
+  create-release-version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: react-application
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+      - uses: ./.github/actions/validate-release-version
+        with:
+          release_version: ${{ inputs.release_version }}
+      - uses: ./.github/actions/fail-if-release-version-exists
+        with:
+          release_version: ${{ inputs.release_version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/create-release-tag
+        with:
+          commit_sha: ${{ inputs.commit_sha }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          release_version: ${{ inputs.release_version }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: "react-application/.nvmrc"
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4.6.0
+        with:
+          name: dist
+          path: ./react-application/dist
